@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+#define r 3
 
-int fil,col,numA[3][3],numB[3][3],numC[3][3],k,det,l;
+int fil,col,numA[r][r],numB[r][r],numC[r][r],scalar[r][r];
+int k,s,det,l,m,numero;
 
 void menu();
 
@@ -19,9 +21,12 @@ void determinanteMatriz();
 
 void invertirMatriz();
 
+void multiplicacionEscalar();
+
 void imprimirDatos(); 
 
 int main(){
+	
     system("color f1");
     menu();
     return 0;
@@ -31,19 +36,20 @@ int main(){
 void menu(){
     int opcion;
     do{
-    	printf("\n|-------------------------|");
-        printf("\n|----------MENU-----------|");
-        printf("\n|-------------------------|");
-        printf("\n|1. llenar matriz A       |");
-        printf("\n|2. llenar matriz B       |");
-        printf("\n|3. sumar Matriz          |");
-        printf("\n|4. restar Matriz         |");
-        printf("\n|5. multiplicar Matriz    |");
-        printf("\n|6. determinante Matriz   |");
-        printf("\n|7. invertir Matriz       |");
-        printf("\n|8. Imprimir Datos        |");
-        printf("\n|0. Salir                 |");
-        printf("\n|-------------------------|");
+    	printf("\n|---------------------------------|");
+        printf("\n|--------------MENU---------------|");
+        printf("\n|---------------------------------|");
+        printf("\n|1. llenar matriz A               |");
+        printf("\n|2. llenar matriz B               |");
+        printf("\n|3. sumar Matriz                  |");
+        printf("\n|4. restar Matriz                 |");
+        printf("\n|5. multiplicar Matriz            |");
+        printf("\n|6. determinante Matriz           |");
+        printf("\n|7. invertir Matriz               |");
+        printf("\n|8. multiplicacion escalar        |");
+        printf("\n|9. Imprimir Datos                |");
+        printf("\n|0. Salir                         |");
+        printf("\n|---------------------------------|");
         printf("\nIngrese una opcion:");
         scanf("%d", &opcion);
         switch(opcion){
@@ -61,7 +67,9 @@ void menu(){
             	break;
             case 7: invertirMatriz();
             	break;
-            case 8: imprimirDatos(); 
+            case 8: multiplicacionEscalar();
+            	break;
+            case 9: imprimirDatos(); 
                 break;
             case 0: exit(0);
                 break;
@@ -76,8 +84,9 @@ void menu(){
 void llenarMatrizA(){
 	
 	printf("llenar matriz A con filas y columnas: \n");
-	for(fil=0; fil<3; fil++){ 
-		for(col=0; col<3; col++){
+	for(fil=0; fil<r; fil++){ 
+		for(col=0; col<r; col++){
+		printf("Matriz A(%d,%d) =",fil,col); 
 		scanf("%d",&numA[fil][col]);
 		}
 	printf("");
@@ -86,8 +95,9 @@ void llenarMatrizA(){
 
 void llenarMatrizB(){ 
 	printf("llenar matriz B con filas y columnas: \n");
-	for(fil=0; fil<3; fil++){ 
-		for(col=0; col<3; col++){
+	for(fil=0; fil<r; fil++){ 
+		for(col=0; col<r; col++){
+		printf("Matriz B(%d,%d) =",fil,col); 
 		scanf("%d",&numB[fil][col]);
 		}
 	printf("");
@@ -96,9 +106,9 @@ void llenarMatrizB(){
 void sumaMatriz(){
 	printf("La Matriz ah sido sumada con exito ");
  
-	for(fil=0; fil<3; fil++){
+	for(fil=0; fil<r; fil++){
  
-		for(col=0; col<3; col++){
+		for(col=0; col<r; col++){
  
 	numC[fil][col]=numA[fil][col]+numB[fil][col];
  
@@ -111,9 +121,9 @@ void sumaMatriz(){
 void restarMatriz(){
 	printf("La resta se ah heco con exito ");
  
-	for(fil=0; fil<3; fil++){
+	for(fil=0; fil<r; fil++){
  
-		for(col=0; col<3; col++){
+		for(col=0; col<r; col++){
  
 	numC[fil][col]=numA[fil][col]-numB[fil][col];
  
@@ -125,13 +135,13 @@ void restarMatriz(){
 }
 
 void multiolicarMatriz(){
-	printf("La Multiplicacion de la Matriz a*b es: ");
+	printf("La Multiplicacion de la Matriz a*b es: \n");
  
-	for(fil=0; fil<3; fil++){
+	for(fil=0; fil<r; fil++){
  
-		for(col=0; col<3; col++){
+		for(col=0; col<r; col++){
 	 	 numC[fil][col]=0;
-			for(k=0; k<3; k++){
+			for(k=0; k<r; k++){
 			numC[fil][col]+=numA[fil][k]*numB[k][col];	
 		 
 			}
@@ -144,32 +154,41 @@ void multiolicarMatriz(){
 }
 
 void determinanteMatriz(){
+	m=r-1; 
+	for(fil=0;fil<r;fil++) {
+	 for(col=0;col<r;col++) 
+printf("\t\t\tA(%d,%d) =%d\n",fil,col,numA[fil][col] );
+ } 
+
+/*****Calculo del DETERMINANTE*****/ 
+det=numA[0][0]; 
+for(k=0;k<m;k++) {
+ l=k+1; 
+	for(fil=l;fil<r;fil++) {
+ 		for(col=l;col<r;col++) 
+			numA[fil][col] = ( numA[k][k]*numA[fil][col]-numA[k][col]*numA[fil][k] )/numA[k][k];
+ 		} 
+		det=det*numA[k+1][k+1]; 
+	} 
+	printf("\n\n"); 
+	printf("\t\t\tDETERMINANTE = %d\n", det); 
+	printf("\t\t\t-------------------------\n"); 
 	
-		for(k=1;k<3;k++){ 
-		
-			l=k+1; 
-			for(fil=l;fil<3;fil++){
-				 for(col=l;col<3;col++) 
-					numA[fil][col] = (numA[k][k]*numA[fil][col]-numA[k][col]*numA[fil][k] )/numA[k][k];
-					} 
-					det=det*numA[k+1][k+1]; 
-			} 
-			printf("\n\n"); 
-			printf("\t\t\tDETERMINANTE = %d\n", det); 
+ 
 } 
 
 void invertirMatriz(){
 	printf("matriz original :\n");
-       for(fil=0;fil<3;fil++){
-    	for(col=0;col<3;col++){
+       for(fil=0;fil<r;fil++){
+    	for(col=0;col<r;col++){
            printf (" %d ",numA[fil][col]);
         }
          printf("\n");
    	 }
        
        printf("matriz invertido :\n");
-       for(fil=0;fil<3;fil++){
-        for(col=0;col<3;col++){
+       for(fil=0;fil<r;fil++){
+        for(col=0;col<r;col++){
              printf(" %d ",numA[col][fil]);
        	 }
         printf("\n");
@@ -177,11 +196,28 @@ void invertirMatriz(){
 	
 }
 
+void multiplicacionEscalar(){
+	printf("ingrese el numero que quieras multiplicar: \n");
+	scanf("%d",&numero);
+	for (fil = 0; fil < r; fil++) {
+        for (col = 0; col < r; col++) {
+        }
+        scalar[fil][col] = numA[fil][col] * numero;
+    }
+    printf ("el resultado de la multiplicacion  escalar es :\n ");
+	for(fil=0;fil<r;fil++) {
+		for(col=0;col<r;col++) {
+			printf("%d  ",fil,col,scalar[fil][col]);
+		}
+		printf("\n  ");
+	}
+	
+}
 
 void imprimirDatos(){ 
 	printf ("el resultado es :\n");
-	for(fil=0;fil<3;fil++) {
-		for(col=0;col<3;col++) {
+	for(fil=0;fil<r;fil++) {
+		for(col=0;col<r;col++) {
 			printf("%d  ",fil,col,numC[fil][col]);
 		}
 		printf("\n  ");
